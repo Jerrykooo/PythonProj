@@ -7,8 +7,9 @@ page = 'pg2'
 
 def get_html(url, page):
     html_con = requests.request('GET', url + page).content
+    html = str(html_con, encoding='utf-8')
 
-    return html_con
+    return html
 
 if __name__ == '__main__':
     b = get_html(url, page)
