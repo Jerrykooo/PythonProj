@@ -7,9 +7,9 @@ page = 'pg2'
 
 def get_html(url, page):
     html_con = requests.request('GET', url + page).content
-    str_html = str(html_con, encoding='utf-8')
-    html = etree.HTML(str_html)
-    print(html)
+
+    return html_con
 
 if __name__ == '__main__':
-    get_html(url, page)
+    b = get_html(url, page)
+    print(b)
