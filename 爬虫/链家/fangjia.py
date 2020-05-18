@@ -28,8 +28,9 @@ def get_html_content(html):
     name = html.xpath('//div[@class="resblock-name"]/a/text()')
     positionInfo = html.xpath('//div[@class="resblock-location"]/a/text()')
     totalPrice = html.xpath('//div[@class="second"]/text()')
+    houseArea = html.xpath('//div[@class="resblock-area"]/span/text()')
 
-    return name, positionInfo, totalPrice
+    return name, positionInfo, totalPrice, houseArea
 
 def xpath_name(name):
     for i in range(len(name)):
@@ -46,10 +47,15 @@ def xpath_total_price(totalPrice):
         # yield totalPrice[i]
         print(totalPrice[i])
 
+def xpath_area(houseArea):
+    for i in range(len(houseArea)):
+        # yield houseArea[i]
+        print(houseArea[i])
 
 if __name__ == '__main__':
     b = get_response_spider(url, page, headers)
-    name, positionInfo, totalPrice = get_html_content(b)
+    name, positionInfo, totalPrice, houseArea = get_html_content(b)
     xpath_name(name)
     xpath_position_info(positionInfo)
     xpath_total_price(totalPrice)
+    xpath_area(houseArea)
