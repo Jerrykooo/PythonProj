@@ -25,6 +25,7 @@ def get_response_spider(url, page, headers):
     return html
 
 def get_html_content(html):
+    houseInfo = html.xpath('//div[@class="resblock-name"]/a/text()')
     name = html.xpath('//div[@class="resblock-name"]/a/text()')
     positionInfo = html.xpath('//div[@class="resblock-location"]/a/text()')
     unitPrice = html.xpath('//div[@class="main-price"]/span[1]/text()')
@@ -34,8 +35,13 @@ def get_html_content(html):
     houseStatus = html.xpath('//div[@class="resblock-name"]/span[2]/text()')
     houseType = html.xpath('//div[@class="resblock-name"]/span[1]/text()')
 
-    return name, positionInfo, unitPrice, totalPrice, houseArea, city, houseStatus, houseType
+    return houseInfo, name, positionInfo, unitPrice, totalPrice, houseArea, city, houseStatus, houseType
 
+def xpath_house_info(houseInfo):
+    for i in range(len(houseInfo)):
+        yield houseInfo[i]
+        # print(houseInfo[i])
+        #
 def xpath_name(name):
     for i in range(len(name)):
         yield name[i]
@@ -77,8 +83,9 @@ def xpath_house_type(houseType):
         # print(houseType[i])
 
 def data_writer():
-
+    i = 0
     while True:
+        data_houseInfo = next(get_house_info)
         data_name = next(get_name)
         data_house_position = next(get_house_position)
         data_unit_price = next(get_unit_price)
@@ -89,12 +96,12 @@ def data_writer():
         data_type = next(get_type)
 
         with open('./lianjia.csv', 'a', newline='', encoding='utf-8-sig') as file:
-            field_names = ['houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'totalPrice', 'area', 'city', 'houseStatus', 'houseType']
+            field_names = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'totalPrice', 'area', 'city', 'houseStatus', 'houseType']
             writer = csv.DictWriter(file, fieldnames=field_names)
             writer.writeheader()
 
-            list1 = ['houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'totalPrice', 'area', 'city', 'houseStatus', 'houseType']
-            list2 = [data_name, data_house_position, data_unit_price, data_total_price, data_area, data_city, data_status, data_type]
+            list1 = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'totalPrice', 'area', 'city', 'houseStatus', 'houseType']
+            list2 = [data_houseInfo, data_name, data_house_position, data_unit_price, data_total_price, data_area, data_city, data_status, data_type]
             list3 = dict(zip(list1, list2))
 
             writer.writerow(list3)
@@ -108,7 +115,8 @@ def data_writer():
 
 if __name__ == '__main__':
     b = get_response_spider(url, page, headers)
-    name, positionInfo, unitPrice, totalPrice, houseArea, city, houseStatus, houseType = get_html_content(b)
+    houseInfo, name, positionInfo, unitPrice, totalPrice, houseArea, city, houseStatus, houseType = get_html_content(b)
+    get_house_info = xpath_house_info(houseInfo)
     get_name = xpath_name(name)
     get_house_position = xpath_position_info(positionInfo)
     get_unit_price = xpath_unit_price(unitPrice)
