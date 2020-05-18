@@ -14,14 +14,31 @@ headers = {
 }
 
 
-def get_html(url, page, headers):
-    html_con = requests.request('GET', url.format(page), headers=headers).content
-    html = str(html_con, encoding='utf-8')
+def get_response_spider(url, page, headers):
+    get_resopnse = requests.request('GET', url.format(page), headers=headers)
+    time.sleep(4)
+    response = get_resopnse.content.decode()
+    # html = get_resopnse.content.decode()
+    html = etree.HTML(response)
+    # html = str(html, encoding='utf-8')
 
     return html
 
-xpath = '/html/body/div[4]/ul[2]/li[1]/div/div[6]/div[2]'
+def get_html_content(html):
+    name = html.xpath('//div[@class="name "]/a/text()')
+    houseType = html.xpath('//div[@class="resblock-type"]/a/text()')
+    houseStatus = html.xpath('//div[@class="sale-status"]/a/text()')
+    totalPrice = html.xpath('//div[@class="second"]/a/text()')
+
+    return name, houseType, houseStatus, totalPrice
+
+def xpath_name(name):
+    for i in range(len(name)):
+        # yield name[i]
+        print(name[i])
+
 
 if __name__ == '__main__':
-    b = get_html(url, page, headers)
-    print(b)
+    b = get_response_spider(url, page, headers)
+    name, houseType, houseStatus, totalPrice = get_html_content(b)
+    xpath_name(name)
