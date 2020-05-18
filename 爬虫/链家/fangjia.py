@@ -25,20 +25,31 @@ def get_response_spider(url, page, headers):
     return html
 
 def get_html_content(html):
-    name = html.xpath('//div[@class="name "]/a/text()')
-    houseType = html.xpath('//div[@class="resblock-type"]/a/text()')
-    houseStatus = html.xpath('//div[@class="sale-status"]/a/text()')
-    totalPrice = html.xpath('//div[@class="second"]/a/text()')
+    name = html.xpath('//div[@class="resblock-name"]/a/text()')
+    positionInfo = html.xpath('//div[@class="resblock-location"]/a/text()')
+    totalPrice = html.xpath('//div[@class="second"]/text()')
 
-    return name, houseType, houseStatus, totalPrice
+    return name, positionInfo, totalPrice
 
 def xpath_name(name):
     for i in range(len(name)):
         # yield name[i]
         print(name[i])
 
+def xpath_position_info(position):
+    for i in range(len(position)):
+        # yield position[i]
+        print(position[i])
+
+def xpath_total_price(totalPrice):
+    for i in range(len(totalPrice)):
+        # yield totalPrice[i]
+        print(totalPrice[i])
+
 
 if __name__ == '__main__':
     b = get_response_spider(url, page, headers)
-    name, houseType, houseStatus, totalPrice = get_html_content(b)
+    name, positionInfo, totalPrice = get_html_content(b)
     xpath_name(name)
+    xpath_position_info(positionInfo)
+    xpath_total_price(totalPrice)
