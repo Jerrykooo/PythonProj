@@ -90,7 +90,7 @@ def xpath_house_type(houseType):
 
 # 写入数据
 def data_writer():
-    i = 0
+    i = 1
     while True:
         data_houseInfo = next(get_house_info)
         data_name = next(get_name)
