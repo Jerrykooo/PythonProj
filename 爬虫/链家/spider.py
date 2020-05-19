@@ -31,11 +31,11 @@ def get_html_content(html):
     unitPrice = html.xpath('//div[@class="main-price"]/span[1]/text()')
     totalPrice = html.xpath('//div[@class="second"]/text()')
     houseArea = html.xpath('//div[@class="resblock-area"]/span/text()')
-    city = html.xpath('//div[@class="resblock-location"]/span/text()')
+    region = html.xpath('//div[@class="resblock-location"]/span/text()')
     houseStatus = html.xpath('//div[@class="resblock-name"]/span[2]/text()')
     houseType = html.xpath('//div[@class="resblock-name"]/span[1]/text()')
 
-    return houseInfo, name, positionInfo, unitPrice, totalPrice, houseArea, city, houseStatus, houseType
+    return houseInfo, name, positionInfo, unitPrice, totalPrice, houseArea, region, houseStatus, houseType
 
 def xpath_house_info(houseInfo):
     for i in range(len(houseInfo)):
@@ -52,11 +52,13 @@ def xpath_position_info(position):
         yield position[i]
         # print(position[i])
 
+# 需对价格未定的做特殊处理
 def xpath_unit_price(unitPrice):
     for i in range(len(unitPrice)):
         yield unitPrice[i]
         # print(unitPrice[i])
 
+# 需对价格未定的做特殊处理
 def xpath_total_price(totalPrice):
     for i in range(len(totalPrice)):
         yield totalPrice[i]
@@ -67,10 +69,10 @@ def xpath_area(houseArea):
         yield houseArea[i]
         # print(houseArea[i])
 
-def xpath_city(city):
-    for i in range(len(city)):
-        yield city[i]
-        # print(city[i])
+def xpath_region(region):
+    for i in range(len(region)):
+        yield region[i]
+        # print(region[i])
 
 def xpath_house_status(houseStatus):
     for i in range(len(houseStatus)):
@@ -91,17 +93,17 @@ def data_writer():
         data_unit_price = next(get_unit_price)
         data_total_price = next(get_total_price)
         data_area = next(get_area)
-        data_city = next(get_city)
+        data_region = next(get_region)
         data_status = next(get_status)
         data_type = next(get_type)
 
         with open('./lianjia.csv', 'a', newline='', encoding='utf-8-sig') as file:
-            field_names = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'area', 'city', 'houseStatus', 'houseType']
+            field_names = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'area', 'region', 'houseStatus', 'houseType']
             writer = csv.DictWriter(file, fieldnames=field_names)
             writer.writeheader()
 
-            list1 = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'area', 'city', 'houseStatus', 'houseType']
-            list2 = [data_houseInfo, data_name, data_house_position, data_total_price, data_unit_price, data_area, data_city, data_status, data_type]
+            list1 = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'area', 'region', 'houseStatus', 'houseType']
+            list2 = [data_houseInfo, data_name, data_house_position, data_total_price, data_unit_price, data_area, data_region, data_status, data_type]
             list3 = dict(zip(list1, list2))
 
             writer.writerow(list3)
@@ -122,7 +124,7 @@ if __name__ == '__main__':
     get_unit_price = xpath_unit_price(unitPrice)
     get_total_price = xpath_total_price(totalPrice)
     get_area = xpath_area(houseArea)
-    get_city = xpath_city(city)
+    get_region = xpath_region(region)
     get_status = xpath_house_status(houseStatus)
     get_type = xpath_house_type(houseType)
     data_writer()
