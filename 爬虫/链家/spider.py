@@ -15,6 +15,7 @@ headers = {
 
 
 # requests获取网页数据
+# 需增加分页获取
 def get_response_spider(url, page, headers):
     get_resopnse = requests.request('GET', url.format(page), headers=headers)
     time.sleep(4)
