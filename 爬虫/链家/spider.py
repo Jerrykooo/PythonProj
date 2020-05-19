@@ -109,6 +109,8 @@ def data_writer():
             list3 = dict(zip(list1, list2))
 
             writer = csv.DictWriter(file, fieldnames=field_names)
+
+            # 追加模式打开的文件，光标位于文件末尾，会导致无法判断是否有表头，需重新打开后判断
             with open('./lianjia.csv', 'r', encoding='utf-8') as file_reader:
                 dict_reader = csv.DictReader(file_reader)
                 if not [field_names for field_names in dict_reader]:
