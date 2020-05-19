@@ -103,20 +103,19 @@ def data_writer():
 
         with open('./lianjia.csv', 'a+', newline='', encoding='utf-8-sig') as file:
             field_names = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'area', 'region', 'houseStatus', 'houseType']
-            writer = csv.DictWriter(file, fieldnames=field_names)
-            dict_reader = csv.DictReader(file)
-            # if not [field_names for field_names in dict_reader]:
-            #     writer.writeheader()
-            # else:
-            #     pass
-            writer.writeheader()
 
             list1 = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'area', 'region', 'houseStatus', 'houseType']
             list2 = [data_houseInfo, data_name, data_house_position, data_total_price, data_unit_price, data_area, data_region, data_status, data_type]
             list3 = dict(zip(list1, list2))
 
-            # 会有重复写入表头的问题
-            writer.writerow(list3)
+            writer = csv.DictWriter(file, fieldnames=field_names)
+            with open('./lianjia.csv', 'r', encoding='utf-8') as file_reader:
+                dict_reader = csv.DictReader(file_reader)
+                if not [field_names for field_names in dict_reader]:
+                    writer.writeheader()
+                    writer.writerow(list3)
+                else:
+                    writer.writerow(list3)
 
             print('写入第' + str(i) + '行数据')
 
