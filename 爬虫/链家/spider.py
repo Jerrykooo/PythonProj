@@ -96,12 +96,12 @@ def data_writer():
         data_type = next(get_type)
 
         with open('./lianjia.csv', 'a', newline='', encoding='utf-8-sig') as file:
-            field_names = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'totalPrice', 'area', 'city', 'houseStatus', 'houseType']
+            field_names = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'area', 'city', 'houseStatus', 'houseType']
             writer = csv.DictWriter(file, fieldnames=field_names)
             writer.writeheader()
 
-            list1 = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'totalPrice', 'area', 'city', 'houseStatus', 'houseType']
-            list2 = [data_houseInfo, data_name, data_house_position, data_unit_price, data_total_price, data_area, data_city, data_status, data_type]
+            list1 = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'area', 'city', 'houseStatus', 'houseType']
+            list2 = [data_houseInfo, data_name, data_house_position, data_total_price, data_unit_price, data_area, data_city, data_status, data_type]
             list3 = dict(zip(list1, list2))
 
             writer.writerow(list3)
@@ -110,12 +110,12 @@ def data_writer():
 
         i += 1
 
-        if i < len(houseInfo):
+        if i > len(houseInfo):
             break
 
 if __name__ == '__main__':
     b = get_response_spider(url, page, headers)
-    houseInfo, name, positionInfo, unitPrice, totalPrice, houseArea, city, houseStatus, houseType = get_html_content(b)
+    houseInfo, name, positionInfo, unitPrice, totalPrice, houseArea, region, houseStatus, houseType = get_html_content(b)
     get_house_info = xpath_house_info(houseInfo)
     get_name = xpath_name(name)
     get_house_position = xpath_position_info(positionInfo)
@@ -125,4 +125,5 @@ if __name__ == '__main__':
     get_city = xpath_city(city)
     get_status = xpath_house_status(houseStatus)
     get_type = xpath_house_type(houseType)
+    data_writer()
 
