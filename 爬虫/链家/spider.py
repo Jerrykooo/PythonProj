@@ -14,6 +14,7 @@ headers = {
 }
 
 
+# requests获取网页数据
 def get_response_spider(url, page, headers):
     get_resopnse = requests.request('GET', url.format(page), headers=headers)
     time.sleep(4)
@@ -24,6 +25,7 @@ def get_response_spider(url, page, headers):
 
     return html
 
+# xpath筛选数据源
 def get_html_content(html):
     houseInfo = html.xpath('//div[@class="resblock-name"]/a/text()')
     name = html.xpath('//div[@class="resblock-name"]/a/text()')
@@ -37,6 +39,7 @@ def get_html_content(html):
 
     return houseInfo, name, positionInfo, unitPrice, totalPrice, houseArea, region, houseStatus, houseType
 
+# 生成数据项
 def xpath_house_info(houseInfo):
     for i in range(len(houseInfo)):
         yield houseInfo[i]
@@ -84,6 +87,7 @@ def xpath_house_type(houseType):
         yield houseType[i]
         # print(houseType[i])
 
+# 写入数据
 def data_writer():
     i = 0
     while True:
@@ -97,15 +101,21 @@ def data_writer():
         data_status = next(get_status)
         data_type = next(get_type)
 
-        with open('./lianjia.csv', 'a', newline='', encoding='utf-8-sig') as file:
+        with open('./lianjia.csv', 'a+', newline='', encoding='utf-8-sig') as file:
             field_names = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'area', 'region', 'houseStatus', 'houseType']
             writer = csv.DictWriter(file, fieldnames=field_names)
+            dict_reader = csv.DictReader(file)
+            # if not [field_names for field_names in dict_reader]:
+            #     writer.writeheader()
+            # else:
+            #     pass
             writer.writeheader()
 
             list1 = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'area', 'region', 'houseStatus', 'houseType']
             list2 = [data_houseInfo, data_name, data_house_position, data_total_price, data_unit_price, data_area, data_region, data_status, data_type]
             list3 = dict(zip(list1, list2))
 
+            # 会有重复写入表头的问题
             writer.writerow(list3)
 
             print('写入第' + str(i) + '行数据')
