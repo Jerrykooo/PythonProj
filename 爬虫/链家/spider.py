@@ -7,18 +7,12 @@ import csv
 import pandas as pd
 import time
 
-# 获取在售房屋信息
-url = 'https://hz.fang.lianjia.com/loupan/nhs1pg{}'
-page = '2'
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36'
-}
-
 
 # requests获取网页数据
 # 需增加分页获取
 def get_response_spider(url, page, headers):
     get_resopnse = requests.request('GET', url.format(page), headers=headers)
+    print(url.format(page))
     time.sleep(4)
     response = get_resopnse.content.decode()
     # html = get_resopnse.content.decode()
@@ -57,13 +51,13 @@ def xpath_position_info(position):
         yield position[i]
         # print(position[i])
 
-# 需对价格未定的做特殊处理
+# 需对价格未定的做特殊处理--url仅获取在售房屋
 def xpath_unit_price(unitPrice):
     for i in range(len(unitPrice)):
         yield unitPrice[i]
         # print(unitPrice[i])
 
-# 需对价格未定的做特殊处理
+# 需对价格未定的做特殊处理--url仅获取在售房屋
 def xpath_total_price(totalPrice):
     for i in range(len(totalPrice)):
         yield totalPrice[i]
@@ -89,8 +83,22 @@ def xpath_house_type(houseType):
         yield houseType[i]
         # print(houseType[i])
 
+def get_data(houseInfo, name, positionInfo, unitPrice, totalPrice, houseArea, region, houseStatus, houseType):
+    get_house_info = xpath_house_info(houseInfo)
+    get_name = xpath_name(name)
+    get_house_position = xpath_position_info(positionInfo)
+    get_unit_price = xpath_unit_price(unitPrice)
+    get_total_price = xpath_total_price(totalPrice)
+    get_area = xpath_area(houseArea)
+    get_region = xpath_region(region)
+    get_status = xpath_house_status(houseStatus)
+    get_type = xpath_house_type(houseType)
+
+    return get_house_info, get_name, get_house_position, get_unit_price, get_total_price, get_area, get_region, get_status, get_type
+
+
 # 写入数据
-def data_writer():
+def data_writer(get_house_info, get_name, get_house_position, get_unit_price, get_total_price, get_area, get_region, get_status, get_type, houseInfo):
     i = 1
     while True:
         data_houseInfo = next(get_house_info)
@@ -135,17 +143,26 @@ def data_writer():
         if i > len(houseInfo):
             break
 
+
+def run():
+    page = 0
+
+    while True:
+        # 获取在售房屋信息
+        url = 'https://hz.fang.lianjia.com/loupan/nhs1pg{}'
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36'
+        }
+        html = get_response_spider(url, page, headers)
+        houseInfo, name, positionInfo, unitPrice, totalPrice, houseArea, region, houseStatus, houseType = get_html_content(html)
+        get_house_info, get_name, get_house_position, get_unit_price, get_total_price, get_area, get_region, get_status, get_type = get_data(houseInfo, name, positionInfo, unitPrice, totalPrice, houseArea, region, houseStatus, houseType)
+        data_writer(get_house_info, get_name, get_house_position, get_unit_price, get_total_price, get_area, get_region, get_status, get_type, houseInfo)
+
+        page += 1
+
+        if page == 5:
+            break
+
 if __name__ == '__main__':
-    b = get_response_spider(url, page, headers)
-    houseInfo, name, positionInfo, unitPrice, totalPrice, houseArea, region, houseStatus, houseType = get_html_content(b)
-    get_house_info = xpath_house_info(houseInfo)
-    get_name = xpath_name(name)
-    get_house_position = xpath_position_info(positionInfo)
-    get_unit_price = xpath_unit_price(unitPrice)
-    get_total_price = xpath_total_price(totalPrice)
-    get_area = xpath_area(houseArea)
-    get_region = xpath_region(region)
-    get_status = xpath_house_status(houseStatus)
-    get_type = xpath_house_type(houseType)
-    data_writer()
+    run()
 
