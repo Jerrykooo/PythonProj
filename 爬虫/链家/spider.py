@@ -7,7 +7,8 @@ import csv
 import pandas as pd
 import time
 
-url = 'https://hz.fang.lianjia.com/loupan/pg{}'
+# 获取在售房屋信息
+url = 'https://hz.fang.lianjia.com/loupan/nhs1pg{}'
 page = '2'
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36'
@@ -107,6 +108,13 @@ def data_writer():
 
             list1 = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'area', 'region', 'houseStatus', 'houseType']
             list2 = [data_houseInfo, data_name, data_house_position, data_total_price, data_unit_price, data_area, data_region, data_status, data_type]
+
+            # 源数据的unitprice中含有总价，需处理
+            # if list2[3] < 8000:
+            #     list2[3] += '万元/套'
+            #     list3 = dict(zip(list1, list2))
+            # else:
+            #     list3 = dict(zip(list1, list2))
             list3 = dict(zip(list1, list2))
 
             writer = csv.DictWriter(file, fieldnames=field_names)
