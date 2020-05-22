@@ -22,9 +22,9 @@ class Spider(object):
         print(self.url.format(self.page))
         time.sleep(4)
         self.response = self.get_resopnse.content.decode()
-        # html = get_resopnse.content.decode()
+        # self.html = self.get_resopnse.content.decode()
         self.html = etree.HTML(self.response)
-        # html = str(html, encoding='utf-8')
+        # self.html = str(self.html, encoding='utf-8')
 
         return self.html
 
@@ -39,7 +39,7 @@ class Spider(object):
         self.houseStatus = self.html.xpath('//div[@class="resblock-name"]/span[2]/text()')
         self.houseType = self.html.xpath('//div[@class="resblock-name"]/span[1]/text()')
 
-        return self.houseInfo, self.name, self.positionInfo, self.unitPrice, self.totalPrice, self.houseArea, self.region, self.houseStatus, self.houseType
+        # return self.houseInfo, self.name, self.positionInfo, self.unitPrice, self.totalPrice, self.houseArea, self.region, self.houseStatus, self.houseType
 
     # 生成数据项
     def xpath_house_info(self):
@@ -101,7 +101,7 @@ class Spider(object):
         self.get_status = self.xpath_house_status()
         self.get_type = self.xpath_house_type()
 
-        return self.get_house_info, self.get_name, self.get_house_position, self.get_unit_price, self.get_total_price, self.get_area, self.get_region, self.get_status, self.get_type
+        # return self.get_house_info, self.get_name, self.get_house_position, self.get_unit_price, self.get_total_price, self.get_area, self.get_region, self.get_status, self.get_type
 
     def data_writer(self):
         i = 1
