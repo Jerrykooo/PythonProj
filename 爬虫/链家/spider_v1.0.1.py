@@ -106,15 +106,44 @@ class Spider(object):
     def data_writer(self):
         i = 1
         while True:
-            self.data_houseInfo = next(self.get_house_info)
-            self.data_name = next(self.get_name)
-            self.data_house_position = next(self.get_house_position)
+            # self.data_houseInfo = next(self.get_house_info)
+            # self.data_name = next(self.get_name)
+            # self.data_house_position = next(self.get_house_position)
+            # self.data_unit_price = next(self.get_unit_price)
+            # self.data_total_price = next(self.get_total_price)
+            # self.data_area = next(self.get_area)
+            # self.data_region = next(self.get_region)
+            # self.data_status = next(self.get_status)
+            # self.data_type = next(self.get_type)
+
+            # self.data_total_price = next(self.get_total_price)
             self.data_unit_price = next(self.get_unit_price)
-            self.data_total_price = next(self.get_total_price)
-            self.data_area = next(self.get_area)
-            self.data_region = next(self.get_region)
-            self.data_status = next(self.get_status)
-            self.data_type = next(self.get_type)
+
+            print(self.data_unit_price)
+
+            if self.data_unit_price == '价格待定':
+                self.data_houseInfo = next(self.get_house_info)
+                self.data_name = next(self.get_name)
+                self.data_house_position = next(self.get_house_position)
+                # self.data_unit_price = '价格未定'
+                self.data_total_price = '价格待定'
+                self.data_area = '大小未定'
+                self.data_region = next(self.get_region)
+                self.data_region_area = next(self.get_region)
+                self.data_status = next(self.get_status)
+                self.data_type = next(self.get_type)
+
+            else:
+                self.data_houseInfo = next(self.get_house_info)
+                self.data_name = next(self.get_name)
+                self.data_house_position = next(self.get_house_position)
+                # self.data_unit_price = next(self.get_unit_price)
+                self.data_total_price = next(self.get_total_price)
+                self.data_area = next(self.get_area)
+                self.data_region = next(self.get_region)
+                self.data_region_area = next(self.get_region)
+                self.data_status = next(self.get_status)
+                self.data_type = next(self.get_type)
 
             with open('./lianjia.csv', 'a+', newline='', encoding='utf-8-sig') as file:
                 field_names = ['houseInfo', 'houseName', 'housePosition', 'housePrice/万元', 'unitPrice', 'area',
